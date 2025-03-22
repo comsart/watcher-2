@@ -25,7 +25,6 @@ func downloadExec() {
 		fmt.Println("Błąd tworzenia pliku tymczasowego:", err)
 		return
 	}
-	defer tmpFile.Close()
 
 	resp, err := http.Get(updateURL)
 	if err != nil {
@@ -50,6 +49,7 @@ func downloadExec() {
 		return
 	}
 
+	tmpFile.Close()
 	// Uruchomienie nowej wersji i zamknięcie starej
 	startAnotherIns(tmpFilePath, orgExec)
 	fmt.Println("Nowa wersja uruchomiona, zamykanie starej...")
@@ -63,7 +63,6 @@ func startAnotherIns(path, secParam string) {
 	execCmd.Stderr = os.Stderr
 	err := execCmd.Start()
 	if err != nil {
-		fmt.Println("Błąd uruchamiania nowej wersji:", err)
-		return
+		panic("Błąd uruchamiania nowej wersji: " + err.Error())
 	}
 }
