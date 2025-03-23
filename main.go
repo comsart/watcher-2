@@ -8,7 +8,6 @@ import (
 const watchFlag = "--watch"
 
 func main() {
-	fmt.Println("hallo from main of", os.Args[0])
 
 	var secParam string
 	if len(os.Args) == 3 {
@@ -17,13 +16,13 @@ func main() {
 
 	switch secParam {
 	case "":
-		fmt.Println("case: I will download exec from github")
+		fmt.Println("STAGE 1 : I will download exec from github. os.Args: ", os.Args)
 		downloadExec()
 	case watchFlag:
-		fmt.Println("case: I will watch")
+		fmt.Println("STAGE 3 : case: I will watch. os.Args: ", os.Args)
 		watch()
 	default:
-		fmt.Println("case: I will overwrite watcher")
+		fmt.Println("STAGE 2 : I will overwrite watcher. os.Args: ", os.Args)
 		overwriteOrgFile(secParam)
 	}
 

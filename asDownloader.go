@@ -5,10 +5,11 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"time"
 )
+
+// 1-st run as watcher
 
 func downloadExec() {
 
@@ -17,19 +18,17 @@ func downloadExec() {
 	exe := filepath.Ext(filepath.Base(orgExec))
 	updateURL := fmt.Sprintf("https://raw.githubusercontent.com/comsart/watcher-2/master/%s", "watcher"+exe)
 
-	// Pobranie nowej wersji
+	tmpFilePath := filepath.Join(thisDir, "temp"+exe)
 
-	pathToWriteTemp := filepath.Join(thisDir, "temp"+exe)
-
-	tmpFile, err := os.Create(pathToWriteTemp)
+	tmpFile, err := os.Create(tmpFilePath)
 	if err != nil {
 		fmt.Println("Błąd tworzenia pliku tymczasowego:", err)
 		return
 	}
 
-	var githubRsp *http.Response
+	var githubResp *http.Response
 	for {
-		githubRsp, err = http.Get(updateURL)
+		githubResp, err = http.Get(updateURL)
 		if err != nil {
 			fmt.Println("Błąd pobierania nowej wersji:", err)
 			time.Sleep(time.Minute * 1)
@@ -38,38 +37,18 @@ func downloadExec() {
 		break
 	}
 
-	defer githubRsp.Body.Close()
+	defer githubResp.Body.Close()
 
-	_, err = io.Copy(tmpFile, githubRsp.Body)
+	_, err = io.Copy(tmpFile, githubResp.Body)
 	if err != nil {
 		fmt.Println("Błąd zapisu nowej wersji:", err)
 		return
 	}
 
-	tmpFilePath := tmpFile.Name()
 	fmt.Println("Nowa wersja pobrana:", tmpFilePath)
 
-	// Ustawienia uprawnień do wykonania
-	err = os.Chmod(tmpFilePath, 0755)
-	if err != nil {
-		fmt.Println("Błąd ustawiania uprawnień:", err)
-		return
-	}
-
 	tmpFile.Close()
-	// Uruchomienie nowej wersji i zamknięcie starej
 	startAnotherIns(tmpFilePath, orgExec)
 	fmt.Println("Nowa wersja uruchomiona, zamykanie starej...")
 	os.Exit(0)
-}
-
-func startAnotherIns(path, secParam string) {
-	userName := os.Args[1]
-	execCmd := exec.Command(path, userName, secParam)
-	execCmd.Stdout = os.Stdout
-	execCmd.Stderr = os.Stderr
-	err := execCmd.Start()
-	if err != nil {
-		panic("Błąd uruchamiania nowej wersji: " + err.Error())
-	}
 }

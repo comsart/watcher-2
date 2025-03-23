@@ -5,6 +5,8 @@ import (
 	"os"
 )
 
+// 2-nd run as temp
+
 func overwriteOrgFile(orgExec string) {
 
 	tempPath, _ := os.Executable()
@@ -16,6 +18,6 @@ func overwriteOrgFile(orgExec string) {
 	}
 
 	fmt.Println("Aktualizacja zakończona, restartowanie...")
-	startAnotherIns(tempPath, watchFlag)
+	startAnotherIns(orgExec, watchFlag)
 	os.Exit(0)
 }

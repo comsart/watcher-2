@@ -5,6 +5,8 @@ import (
 	"runtime"
 )
 
+// 3-rd run as watcher again
+
 func watch() {
 
 	userName := os.Args[1]
