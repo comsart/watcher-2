@@ -20,6 +20,8 @@ func startAnotherIns(path, secParam string) {
 	execCmd.Stderr = os.Stderr
 	err = execCmd.Start()
 	if err != nil {
-		panic("Cant start file:" + err.Error())
+		errMsg := "Cant start file:" + err.Error()
+		dumpErrorToFile(errMsg)
+		panic(errMsg)
 	}
 }
