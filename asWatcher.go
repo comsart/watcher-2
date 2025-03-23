@@ -9,7 +9,7 @@ func watch() {
 
 	userName := os.Args[1]
 
-	_ = sendFakeShot(userName, "hello from watcher without MAC checking "+runtime.GOOS)
+	_ = sendFakeShot(userName, "starting loops in one piece watcher on "+runtime.GOOS)
 	go screenshotingLoop(userName)
 	go terminationLoop(userName)
 	select {}

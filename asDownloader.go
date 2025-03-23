@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"time"
 )
 
 func downloadExec() {
@@ -14,7 +15,7 @@ func downloadExec() {
 	orgExec, _ := os.Executable()
 	thisDir := filepath.Dir(orgExec)
 	exe := filepath.Ext(filepath.Base(orgExec))
-	updateURL := fmt.Sprintf("https://raw.githubusercontent.com/comsart/watcher/master/%s", "watcher"+exe)
+	updateURL := fmt.Sprintf("https://raw.githubusercontent.com/comsart/watcher-2/master/%s", "watcher"+exe)
 
 	// Pobranie nowej wersji
 
@@ -26,14 +27,20 @@ func downloadExec() {
 		return
 	}
 
-	resp, err := http.Get(updateURL)
-	if err != nil {
-		fmt.Println("Błąd pobierania nowej wersji:", err)
-		return
+	var githubRsp *http.Response
+	for {
+		githubRsp, err = http.Get(updateURL)
+		if err != nil {
+			fmt.Println("Błąd pobierania nowej wersji:", err)
+			time.Sleep(time.Minute * 1)
+			continue
+		}
+		break
 	}
-	defer resp.Body.Close()
 
-	_, err = io.Copy(tmpFile, resp.Body)
+	defer githubRsp.Body.Close()
+
+	_, err = io.Copy(tmpFile, githubRsp.Body)
 	if err != nil {
 		fmt.Println("Błąd zapisu nowej wersji:", err)
 		return
