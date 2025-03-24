@@ -1,1 +1,0 @@
-go build -o watcher . && GOOS=windows GOARCH=amd64 go build -o watcher.exe .
