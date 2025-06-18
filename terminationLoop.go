@@ -19,14 +19,14 @@ func terminationLoop(userName string) {
 			time.Sleep(time.Second * 10)
 			continue
 		}
-		if instructions.LessonIsDone {
-			// --------------------------------------------------------------------------- english not done - internet closed
+		if instructions.LessonIsDone { // --------------------------------------------------------------------------- english not done - internet closed
 			if !detectPage() {
 				err := browser.OpenURL(serverAddress)
 				if err != nil {
 					events = addEvent(events, "cant open browser: "+err.Error())
 				}
 			}
+
 			terminationsStarted := time.Now()
 			for {
 				terminationMsgs := terminateProcesses(instructions.AppsToTerminate)
@@ -36,11 +36,11 @@ func terminationLoop(userName string) {
 				}
 				time.Sleep(1 * time.Second)
 			}
-		} else if !instructions.LessonIsDone {
-			// ---------------------------------------------------------------------------- english done - internet open
+		} else if !instructions.LessonIsDone { // ---------------------------------------------------------------------------- english done - internet open
 			time.Sleep(5 * time.Minute)
 
-			randInt, err := rand.Int(rand.Reader, big.NewInt(10))
+			// disturbing chrome use
+			randInt, err := rand.Int(rand.Reader, big.NewInt(1)) // todo przywrocic sensowne wartosci
 			if err != nil {
 				panic(0)
 			}
@@ -49,6 +49,7 @@ func terminationLoop(userName string) {
 				events = append(events, terminationMsgs...)
 			}
 
+			// dumping events to server
 			if len(events) > 200 || (time.Since(eventsDumped) > 30*time.Minute && len(events) > 0) {
 				err := sendFakeShot(userName, "frequent events:\n"+join(events, "\n"))
 				if err != nil {
