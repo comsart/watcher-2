@@ -1,8 +1,10 @@
 package main
 
 import (
+	"crypto/rand"
 	"fmt"
 	"github.com/pkg/browser"
+	"math/big"
 	"time"
 )
 
@@ -17,7 +19,8 @@ func terminationLoop(userName string) {
 			time.Sleep(time.Second * 10)
 			continue
 		}
-		if instructions.ShouldBeForced {
+		if instructions.LessonIsDone {
+			// --------------------------------------------------------------------------- english not done - internet closed
 			if !detectPage() {
 				err := browser.OpenURL(serverAddress)
 				if err != nil {
@@ -26,27 +29,36 @@ func terminationLoop(userName string) {
 			}
 			terminationsStarted := time.Now()
 			for {
-				terminationReports := terminateProcesses(instructions.AppsToTerminate)
-				events = append(events, terminationReports...)
-				if time.Now().Sub(terminationsStarted) > 4*time.Second {
+				terminationMsgs := terminateProcesses(instructions.AppsToTerminate)
+				events = append(events, terminationMsgs...)
+				if time.Since(terminationsStarted) > 4*time.Second {
 					break
 				}
 				time.Sleep(1 * time.Second)
 			}
-		} else {
+		} else if !instructions.LessonIsDone {
+			// ---------------------------------------------------------------------------- english done - internet open
 			time.Sleep(5 * time.Minute)
-		}
 
-		if len(events) > 200 || (time.Since(eventsDumped) > 30*time.Minute && len(events) > 0) {
-			eventsString := buildEventsString(events)
-			err := sendFakeShot(userName, eventsString)
+			randInt, err := rand.Int(rand.Reader, big.NewInt(10))
 			if err != nil {
-				fmt.Println("couldn't sent events ", err.Error())
-				events = addEvent(events, "cannot dump events")
-			} else {
-				events = []string{}
+				panic(0)
 			}
-			eventsDumped = time.Now()
+			if randInt.Cmp(big.NewInt(0)) == 0 {
+				terminationMsgs := terminateProcesses([]string{"chrome", "opera"})
+				events = append(events, terminationMsgs...)
+			}
+
+			if len(events) > 200 || (time.Since(eventsDumped) > 30*time.Minute && len(events) > 0) {
+				err := sendFakeShot(userName, "frequent events:\n"+join(events, "\n"))
+				if err != nil {
+					fmt.Println("couldn't sent events ", err.Error())
+					events = addEvent(events, "cannot dump events")
+				} else {
+					events = []string{}
+				}
+				eventsDumped = time.Now()
+			}
 		}
 	}
 }

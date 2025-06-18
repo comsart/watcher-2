@@ -2,13 +2,12 @@ package main
 
 import "strings"
 
-func buildEventsString(events []string) string {
+func join(events []string, separator string) string {
 	var builder strings.Builder
-	builder.WriteString("frequent events:\n")
 
 	for _, event := range events {
 		builder.WriteString(event)
-		builder.WriteRune('\n')
+		builder.WriteString(separator)
 	}
 	return builder.String()
 }

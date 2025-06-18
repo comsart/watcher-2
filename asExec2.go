@@ -8,7 +8,7 @@ import (
 
 // 2-nd run as temp
 
-func overwriteOrgFile(orgExec string) {
+func overwriteOrgFileAndWork(orgExec string) {
 
 	tempPath, _ := os.Executable()
 

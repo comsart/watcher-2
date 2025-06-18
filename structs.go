@@ -13,9 +13,9 @@ type LogRecord struct {
 	ScreenshotData string `json:"screenshotData"`
 }
 
-type Instructions struct {
-	ShouldBeForced  bool     `json:"shouldBeForced"`
-	AppsToTerminate []string `json:"appsToTerminate"`
+type ServerState struct {
+	LessonIsDone    bool     `json:"shouldBeForced"`
+	AppsToTerminate []string `json:"appsToTerminate"` // todo nie musza byc juz wysylane z serwera bo ta apke tez gituje
 }
 
 type ResponseDTO[T any] struct {

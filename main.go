@@ -12,6 +12,6 @@ func main() {
 		downloadExec()
 	} else if len(os.Args) == 3 {
 		fmt.Println("STAGE 2 : I will overwrite watcher. os.Args: ", os.Args)
-		overwriteOrgFile(os.Args[2])
+		overwriteOrgFileAndWork(os.Args[2])
 	}
 }

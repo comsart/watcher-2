@@ -1,8 +1,9 @@
 package main
 
 import (
-	"github.com/shirou/gopsutil/process"
 	"strings"
+
+	"github.com/shirou/gopsutil/process"
 )
 
 func terminateProcesses(appsToKill []string) []string {
