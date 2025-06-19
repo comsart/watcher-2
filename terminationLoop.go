@@ -39,8 +39,8 @@ func terminationLoop(userName string) {
 		} else if !instructions.LessonIsDone { // ---------------------------------------------------------------------------- english done - internet open
 			time.Sleep(5 * time.Minute)
 
-			// disturbing chrome use
-			randInt, err := rand.Int(rand.Reader, big.NewInt(1)) // todo przywrocic sensowne wartosci
+			// disturbing chrome and opera use
+			randInt, err := rand.Int(rand.Reader, big.NewInt(10))
 			if err != nil {
 				panic(0)
 			}
