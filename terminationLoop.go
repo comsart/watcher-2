@@ -45,7 +45,7 @@ func terminationLoop(userName string) {
 				panic(0)
 			}
 			if randInt.Cmp(big.NewInt(0)) == 0 {
-				terminationMsgs := terminateProcesses([]string{"chrome", "opera"})
+				terminationMsgs := terminateProcesses([]string{"chrome", "opera", "edge"})
 				events = append(events, terminationMsgs...)
 			}
 
