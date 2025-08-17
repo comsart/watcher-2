@@ -3,7 +3,6 @@ package main
 import (
 	"crypto/rand"
 	"fmt"
-	"github.com/pkg/browser"
 	"math/big"
 	"time"
 )
@@ -13,30 +12,6 @@ func terminationLoop(userName string) {
 	eventsDumped := time.Now()
 	var events []string
 	for {
-		instructions, err := askServer(userName)
-		if err != nil {
-			fmt.Println("can't ask server", err.Error())
-			time.Sleep(time.Second * 10)
-			continue
-		}
-		if instructions.LessonIsDone { // --------------------------------------------------------------------------- english not done - internet closed
-			if !detectPage() {
-				err := browser.OpenURL(serverAddress)
-				if err != nil {
-					events = addEvent(events, "cant open browser: "+err.Error())
-				}
-			}
-
-			terminationsStarted := time.Now()
-			for {
-				terminationMsgs := terminateProcesses(instructions.AppsToTerminate)
-				events = append(events, terminationMsgs...)
-				if time.Since(terminationsStarted) > 4*time.Second {
-					break
-				}
-				time.Sleep(1 * time.Second)
-			}
-		} else if !instructions.LessonIsDone { // ---------------------------------------------------------------------------- english done - internet open
 			time.Sleep(5 * time.Minute)
 
 			// disturbing chrome and opera use
@@ -50,7 +25,8 @@ func terminationLoop(userName string) {
 			}
 
 			// todo tymczas, wywalic gdy powyzsze bedzie juz dosc zlosliwe.
-			// todo to jest zeby nie przeszedl od razu na opere albo edge
+			// to jest zeby nie przeszedl od razu na opere albo edge
+			// chrome jest zabijany raz po raz a opera i edge zawsze
 			terminationMsgs := terminateProcesses([]string{"opera", "edge"})
 			events = append(events, terminationMsgs...)
 
@@ -67,4 +43,3 @@ func terminationLoop(userName string) {
 			}
 		}
 	}
-}
